@@ -112,7 +112,7 @@ let app = {
                         </div>
                         <div class="option">
                             <i class="fas fa-ellipsis-h"></i>
-                            <a href="">Dowload</a hreff="">
+                            
                         </div>
                     </div>`
         })
