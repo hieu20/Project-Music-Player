@@ -12,9 +12,6 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document)
 
-const PLAYER_STORAGE_KEY = 'TH_PLAYER'
-
-
 const audio =$('#audio')
 const playBtn = $('.btn-toggle-play')
 
@@ -26,7 +23,7 @@ const input = $('.progress')
 const nextBtn = $('.btn-next')
 const prevBtn = $('.btn-prev')
 const randomBtn = $('.btn-random')
-const repeatBtn = $('.btn-repeat')
+const repaetBtn = $('.btn-repeat')
 const playList=$('.playlist')
 
 let app = {
@@ -34,7 +31,6 @@ let app = {
     isPlaying: false ,
     isRandom : false,
     isRepeat : false,
-    config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {} ,
     songs: [
         {
             name: 'Tháng Năm',
@@ -103,10 +99,7 @@ let app = {
             img: './aset/img/img-InTheEnd.jfif'
         }
     ],
-    setConfig(key,value){
-        this.config[key] = value;
-        localStorage.setItem(PLAYER_STORAGE_KEY, JSON.stringify(this.config))
-    },
+
 
     
     renderSongs(){
@@ -119,6 +112,7 @@ let app = {
                         </div>
                         <div class="option">
                             <i class="fas fa-ellipsis-h"></i>
+                            <a href="">Dowload</a hreff="">
                         </div>
                     </div>`
         })
@@ -186,7 +180,6 @@ let app = {
             }
         }
 
-
         // xử lí tua song
         audio.ontimeupdate = function(){
             let currentTime = audio.currentTime;
@@ -201,8 +194,6 @@ let app = {
                 audio.currentTime = seekTime;
             }
         }
-
-
 
         // xử lí next Song
         nextBtn.onclick = function(){
@@ -242,20 +233,16 @@ let app = {
         randomBtn.onclick= function(){
             app.isRandom = !app.isRandom
             this.classList.toggle('active') 
-            repeatBtn.classList.remove('active')
+            repaetBtn.classList.remove('active')
             app.isRepeat = false;
-            app.setConfig('isRamdom',app.isRandom)
         }
 
-
         // Xử lí bật / tắt chế độ repeat
-        repeatBtn.onclick = function(){
+        repaetBtn.onclick = function(){
             app.isRepeat = !app.isRepeat
-            repeatBtn.classList.toggle('active')
+            repaetBtn.classList.toggle('active')
             app.isRandom = false
             randomBtn.classList.remove('active')
-            app.setConfig('isRepeat',app.isRepeat)
-
         }
 
 
@@ -295,7 +282,10 @@ let app = {
                     audio.play()
                     player.classList.add('playing')
                     app.isPlaying = true
-                }                       
+                } 
+                if( e.target.closest('.option')){
+                   
+                }                      
             }
         }
     },
@@ -305,11 +295,7 @@ let app = {
         $('header>h2').innerHTML = this.currentSong.name
         audio.src = this.currentSong.path;
     },
-    
-    loadConfig(){
-        this.isRandom = this.config.isRandom
-        this.isRepeat = this.config.isRepeat
-    },
+
 
     // xử lí next Song
     nextSong(){
@@ -339,7 +325,7 @@ let app = {
         let newIndex 
         do { // random ra một giá trị ngẫu nhiên
             newIndex = Math.floor(Math.random() * app.songs.length) 
-        }while(newIndex === app.currentIndex) // nếu giá trị trên trùng với giá trị CurrentIndex thì mới thực hiện lại do
+        }while(newIndex === app.currentIndex || newIndex===app.currentIndex +1) // nếu giá trị trên trùng với giá trị CurrentIndex thì mới thực hiện lại do
         app.currentIndex = newIndex
         app.loadCurrentSong()
             
@@ -355,10 +341,6 @@ let app = {
     },
 
     start(){
-        // gán cấu hình từ config vào ứng dụng
-        this.loadConfig()
-
-
         // định nghĩa các thuộc tính
         this.defineProperties()
 
@@ -370,16 +352,10 @@ let app = {
         this.loadCurrentSong()
        
         this.renderSongs();
-
-        // hiển thị trang thái ban đầu của button Rêpat & Random
-        // randomBtn.classList.toggle('active',this.isRandom)
-        // repeatBtn.classList.toggle('active',this.isRepeat)
-       
     }
 }
 
 app.start()
-
 
 
 
